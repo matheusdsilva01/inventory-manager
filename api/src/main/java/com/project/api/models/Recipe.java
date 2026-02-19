@@ -12,6 +12,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @AllArgsConstructor
+
 @NoArgsConstructor
 @Entity
 @Table(name = "recipes")
@@ -24,6 +25,6 @@ public class Recipe {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<RecipeItem> recipeItems;
 }

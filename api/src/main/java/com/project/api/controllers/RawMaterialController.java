@@ -2,6 +2,7 @@ package com.project.api.controllers;
 
 import com.project.api.dto.rawmaterial.CreateRawMaterialDTO;
 import com.project.api.dto.rawmaterial.RawMaterialResponseDTO;
+import com.project.api.dto.rawmaterial.UpdateRawMaterialDTO;
 import com.project.api.services.RawMaterialService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -28,10 +29,20 @@ class RawMaterialController {
         return ResponseEntity.ok(materials);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<RawMaterialResponseDTO> getRawMaterialById(@PathVariable UUID id) {
+        return ResponseEntity.ok(RawMaterialResponseDTO.fromEntity(rawMaterialService.getRawMaterialById(id)));
+    }
+
     @PostMapping
     public ResponseEntity<RawMaterialResponseDTO> createRawMaterial(@Valid @RequestBody CreateRawMaterialDTO rawMaterial) {
         var created = rawMaterialService.createRawMaterial(rawMaterial);
         return new ResponseEntity<>(RawMaterialResponseDTO.fromEntity(created), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RawMaterialResponseDTO> updateRawMaterial(@PathVariable UUID id, @Valid @RequestBody UpdateRawMaterialDTO dto) {
+        return ResponseEntity.ok(RawMaterialResponseDTO.fromEntity(rawMaterialService.updateRawMaterial(id, dto)));
     }
 
     @DeleteMapping("/{id}")
