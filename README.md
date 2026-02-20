@@ -4,6 +4,12 @@ Este projeto foi desenvolvido como solução para a proposta de um teste técnic
 
 Você pode saber mais sobre o desenvolvimento e as decisões tomadas lendo o seguinte arquivo: [walkthrough.md](./walkthrough.md).
 
+## Tecnologias utilizadas
+- Backend: Java, Spring
+- Frontend: TypeScript, React, Next, Redux
+- Banco de dados: PostgreSQL
+- Infra: Docker
+
 ## Execução do projeto
 - Docker
 - Para rodar o projeto utilizando Docker, basta executar o comando abaixo na raiz do projeto:
