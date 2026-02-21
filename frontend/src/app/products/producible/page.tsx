@@ -45,6 +45,7 @@ export default function ProducibleProductsPage() {
                             <TableHead>Nome</TableHead>
                             <TableHead>Código</TableHead>
                             <TableHead>Preço</TableHead>
+                            <TableHead className="text-right">Qtd produzível</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -60,12 +61,15 @@ export default function ProducibleProductsPage() {
                                     <TableCell>
                                         <Skeleton className="h-5 w-20" />
                                     </TableCell>
+                                    <TableCell>
+                                        <Skeleton className="h-5 w-12 ml-auto" />
+                                    </TableCell>
                                 </TableRow>
                             ))
                         ) : data.length === 0 ? (
                             <TableRow>
                                 <TableCell
-                                    colSpan={3}
+                                    colSpan={4}
                                     className="h-32 text-center text-muted-foreground"
                                 >
                                     Nenhum produto disponível para produção.
@@ -86,6 +90,9 @@ export default function ProducibleProductsPage() {
                                         </Badge>
                                     </TableCell>
                                     <TableCell>{formatPrice(product.price)}</TableCell>
+                                    <TableCell className="text-right tabular-nums">
+                                        {product.maxProducibleUnits}
+                                    </TableCell>
                                 </TableRow>
                             ))
                         )}

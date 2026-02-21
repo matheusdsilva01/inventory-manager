@@ -4,6 +4,7 @@ import com.project.api.dto.recipe.RecipeResponseDTO;
 import com.project.api.dto.product.CreateProductDTO;
 import com.project.api.dto.product.ProductDTO;
 import com.project.api.dto.product.ProductResponseDTO;
+import com.project.api.dto.product.ProducibleProductDTO;
 import com.project.api.models.Product;
 import com.project.api.models.Recipe;
 import com.project.api.services.ProductService;
@@ -36,7 +37,7 @@ public class ProductController {
     }
 
     @GetMapping("/producible")
-    public ResponseEntity<List<ProductDTO>> getProducibleProducts() {
+    public ResponseEntity<List<ProducibleProductDTO>> getProducibleProducts() {
         return new ResponseEntity<>(productService.getProducibleProducts(), HttpStatus.OK);
     }
 

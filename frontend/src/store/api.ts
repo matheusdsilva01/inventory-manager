@@ -4,6 +4,7 @@ import type { AxiosRequestConfig } from "axios"
 import { api as axiosInstance } from "@/lib/axios"
 import type {
     Product,
+    ProducibleProduct,
     ProductResponse,
     CreateProduct,
     UpdateProduct,
@@ -36,7 +37,7 @@ export const inventoryApi = createApi({
             providesTags: ["Products"],
         }),
 
-        getProducibleProducts: builder.query<Product[], void>({
+        getProducibleProducts: builder.query<ProducibleProduct[], void>({
             query: () => ({ url: "/products/producible", method: "get" }),
             providesTags: ["Products", "RawMaterials", "Recipes"],
         }),

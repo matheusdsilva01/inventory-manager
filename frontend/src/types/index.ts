@@ -6,6 +6,10 @@ export interface Product {
     price: number;
 }
 
+export interface ProducibleProduct extends Product {
+    maxProducibleUnits: number;
+}
+
 export interface ProductResponse {
     id: string;
     name: string;
