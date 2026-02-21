@@ -1,6 +1,7 @@
 package com.project.api.dto.product;
 
 import com.project.api.models.Product;
+import com.project.api.models.Recipe;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -19,6 +20,7 @@ public record CreateProductDTO (
         product.setName(this.name);
         product.setCode(this.code);
         product.setPrice(this.price);
+        product.setRecipe(new Recipe(product));
 
         return product;
     }
