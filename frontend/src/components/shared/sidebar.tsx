@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import {
     LayoutDashboard,
     Package,
+    PackageCheck,
     Boxes,
     CookingPot,
     ChevronLeft,
@@ -22,7 +23,8 @@ import { cn } from "@/lib/utils"
 
 const navItems = [
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/products", label: "Produtos", icon: Package },
+    { href: "/products", label: "Produtos", icon: Package, exact: true },
+    { href: "/products/producible", label: "Produzíveis", icon: PackageCheck },
     { href: "/raw-materials", label: "Matérias-Primas", icon: Boxes },
     { href: "/recipes", label: "Receitas", icon: CookingPot },
 ]
@@ -56,8 +58,8 @@ export function Sidebar() {
             <nav className="flex-1 space-y-1 px-3 py-4">
                 {navItems.map((item) => {
                     const isActive =
-                        item.href === "/"
-                            ? pathname === "/"
+                        item.href === "/" || (item as { exact?: boolean }).exact
+                            ? pathname === item.href
                             : pathname.startsWith(item.href)
 
                     const link = (

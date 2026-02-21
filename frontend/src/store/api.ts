@@ -36,6 +36,11 @@ export const inventoryApi = createApi({
             providesTags: ["Products"],
         }),
 
+        getProducibleProducts: builder.query<Product[], void>({
+            query: () => ({ url: "/products/producible", method: "get" }),
+            providesTags: ["Products", "RawMaterials", "Recipes"],
+        }),
+
         getProductRecipe: builder.query<RecipeResponse, string>({
             query: (id) => ({ url: `/products/${id}/recipe`, method: "get" }),
             providesTags: ["Recipes"],
@@ -119,6 +124,7 @@ export const inventoryApi = createApi({
 
 export const {
     useGetProductsQuery,
+    useGetProducibleProductsQuery,
     useGetProductRecipeQuery,
     useLazyGetProductRecipeQuery,
     useCreateProductMutation,

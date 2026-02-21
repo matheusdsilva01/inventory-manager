@@ -35,6 +35,11 @@ public class ProductController {
         return new ResponseEntity<>(productService.getProducts(), HttpStatus.OK);
     }
 
+    @GetMapping("/producible")
+    public ResponseEntity<List<ProductDTO>> getProducibleProducts() {
+        return new ResponseEntity<>(productService.getProducibleProducts(), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable UUID id) {
         Product product = productService.getProductById(id);

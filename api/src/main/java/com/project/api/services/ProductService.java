@@ -26,6 +26,12 @@ public class ProductService {
         return repository.findAll().stream().map(product -> new ProductDTO(product.getId(), product.getName(), product.getCode(), product.getPrice())).toList();
     }
 
+    public List<ProductDTO> getProducibleProducts() {
+        return repository.findProducibleProducts().stream()
+                .map(p -> new ProductDTO(p.getId(), p.getName(), p.getCode(), p.getPrice()))
+                .toList();
+    }
+
     public Product getProductById(UUID id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id.toString()));

@@ -1,18 +1,19 @@
 "use client"
 
 import Link from "next/link"
-import { Package, Boxes, CookingPot, ArrowRight } from "lucide-react"
+import { Package, Boxes, CookingPot, PackageCheck, ArrowRight } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
-import { useGetProductsQuery, useGetRawMaterialsQuery, useGetRecipesQuery } from "@/store/api"
+import { useGetProductsQuery, useGetProducibleProductsQuery, useGetRawMaterialsQuery, useGetRecipesQuery } from "@/store/api"
 
 export default function Home() {
   const { data: products = [], isLoading: loadingProducts } = useGetProductsQuery()
+  const { data: producible = [], isLoading: loadingProducible } = useGetProducibleProductsQuery()
   const { data: rawMaterials = [], isLoading: loadingRawMaterials } = useGetRawMaterialsQuery()
   const { data: recipes = [], isLoading: loadingRecipes } = useGetRecipesQuery()
 
-  const loading = loadingProducts || loadingRawMaterials || loadingRecipes
+  const loading = loadingProducts || loadingProducible || loadingRawMaterials || loadingRecipes
 
   const cards = [
     {
@@ -30,6 +31,14 @@ export default function Home() {
       href: "/raw-materials",
       gradient: "from-emerald-500/10 to-teal-500/10",
       iconColor: "text-emerald-600 dark:text-emerald-400",
+    },
+    {
+      title: "Produzíveis",
+      count: producible.length,
+      icon: PackageCheck,
+      href: "/products/producible",
+      gradient: "from-violet-500/10 to-purple-500/10",
+      iconColor: "text-violet-600 dark:text-violet-400",
     },
     {
       title: "Receitas",
@@ -50,7 +59,7 @@ export default function Home() {
         </p>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((card) => (
           <Card
             key={card.href}
