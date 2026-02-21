@@ -22,7 +22,7 @@ public class RawMaterial {
 
     private String name;
     private String code;
-    private Number quantity;
+    private Integer quantity;
 
     @OneToMany(mappedBy = "rawMaterial", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<RecipeItem> recipeItems;

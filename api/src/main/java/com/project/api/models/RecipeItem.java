@@ -27,5 +27,5 @@ public class RecipeItem {
     @JoinColumn(name = "raw_material_id", nullable = false)
     private RawMaterial rawMaterial;
 
-    private Double quantity;
+    private Integer quantity;
 }

@@ -16,7 +16,7 @@ public record UpdateRawMaterialDTO(
         String code,
         @NotNull(message = "Quantity is required")
         @PositiveOrZero(message = "Quantity must be zero or positive")
-        Number quantity
+        Integer quantity
 ) {
     public RawMaterial toRawMaterial() {
         RawMaterial rawMaterial = new RawMaterial();

@@ -8,7 +8,7 @@ public record RecipeItemResponseDTO(
         UUID rawMaterialId,
         String rawMaterialName,
         String rawMaterialCode,
-        Double quantity
+        Integer quantity
 ) {
     public static RecipeItemResponseDTO fromEntity(RecipeItem item) {
         return new RecipeItemResponseDTO(

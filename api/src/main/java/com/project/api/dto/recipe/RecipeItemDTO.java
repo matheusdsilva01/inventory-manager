@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public record RecipeItemDTO (
         @NotNull UUID rawMaterialId,
-        @Positive Double quantity
+        @Positive Integer quantity
 ) {
     public RecipeItem toRecipeItem(Recipe recipe, RawMaterial rawMaterial) {
         RecipeItem recipeItem = new RecipeItem();
