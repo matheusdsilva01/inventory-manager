@@ -7,8 +7,8 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   {
-    
     rules: {
+      indent: ["error", 2],
       semi: ["error", "never"],
     },
   },

@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from "react-redux"
 import { inventoryApi } from "./api"
 
 export const store = configureStore({
-    reducer: {
-        [inventoryApi.reducerPath]: inventoryApi.reducer,
-    },
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(inventoryApi.middleware),
+  reducer: {
+    [inventoryApi.reducerPath]: inventoryApi.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(inventoryApi.middleware),
 })
 
 setupListeners(store.dispatch)
