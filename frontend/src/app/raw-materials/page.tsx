@@ -1,8 +1,6 @@
 "use client"
 
-import { useState } from "react"
 import { Plus, Pencil, Trash2, MoreHorizontal } from "lucide-react"
-import { toast } from "sonner"
 import {
   Table,
   TableBody,
@@ -19,74 +17,35 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
-import {
-  useGetRawMaterialsQuery,
-  useCreateRawMaterialMutation,
-  useUpdateRawMaterialMutation,
-  useDeleteRawMaterialMutation,
-} from "@/store/api"
-import type { RawMaterial, CreateRawMaterial, UpdateRawMaterial } from "@/types"
+import { PageHeader } from "@/components/common/page-header"
+import { TableSkeleton } from "@/components/common/table-skeleton"
+import { EmptyState } from "@/components/common/empty-state"
+import { ConfirmDeleteDialog } from "@/components/common/confirm-delete-dialog"
 import { RawMaterialFormDialog } from "@/components/pages/raw-materials/form-dialog"
-import { RawMaterialDeleteDialog } from "@/components/pages/raw-materials/delete-dialog"
+import { useRawMaterialsPage } from "@/hooks/use-raw-materials-page"
 
 export default function RawMaterialsPage() {
-  const { data = [], isLoading: loading } = useGetRawMaterialsQuery()
-  const [createRawMaterial] = useCreateRawMaterialMutation()
-  const [updateRawMaterial] = useUpdateRawMaterialMutation()
-  const [deleteRawMaterial] = useDeleteRawMaterialMutation()
-
-  const [formOpen, setFormOpen] = useState(false)
-  const [editingMaterial, setEditingMaterial] = useState<RawMaterial | null>(null)
-
-  const [deleteOpen, setDeleteOpen] = useState(false)
-  const [deletingMaterial, setDeletingMaterial] = useState<RawMaterial | null>(null)
-
-  const handleCreate = () => {
-    setEditingMaterial(null)
-    setFormOpen(true)
-  }
-
-  const handleEdit = (material: RawMaterial) => {
-    setEditingMaterial(material)
-    setFormOpen(true)
-  }
-
-  const handleDelete = (material: RawMaterial) => {
-    setDeletingMaterial(material)
-    setDeleteOpen(true)
-  }
-
-  const handleSubmit = async (formData: CreateRawMaterial | UpdateRawMaterial) => {
-    if ("id" in formData) {
-      await updateRawMaterial(formData as UpdateRawMaterial).unwrap()
-      toast.success("Matéria-prima atualizada com sucesso")
-    } else {
-      await createRawMaterial(formData as CreateRawMaterial).unwrap()
-      toast.success("Matéria-prima criada com sucesso")
-    }
-  }
-
-  const handleConfirmDelete = async () => {
-    if (!deletingMaterial) return
-    await deleteRawMaterial(deletingMaterial.id).unwrap()
-    toast.success("Matéria-prima excluída com sucesso")
-  }
+  const {
+    materials,
+    loading,
+    formDialog,
+    deleteDialog,
+    handleSubmit,
+    handleConfirmDelete,
+  } = useRawMaterialsPage()
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Matérias-Primas</h1>
-          <p className="text-muted-foreground mt-1">
-                        Gerencie as matérias-primas do seu estoque
-          </p>
-        </div>
-        <Button onClick={handleCreate}>
-          <Plus className="mr-2 h-4 w-4" />
-                    Nova Matéria-Prima
-        </Button>
-      </div>
+      <PageHeader
+        title="Matérias-Primas"
+        description="Gerencie as matérias-primas do seu estoque"
+        action={
+          <Button onClick={formDialog.openNew}>
+            <Plus className="mr-2 h-4 w-4" />
+            Nova Matéria-Prima
+          </Button>
+        }
+      />
 
       <div className="rounded-lg border bg-card">
         <Table>
@@ -100,22 +59,11 @@ export default function RawMaterialsPage() {
           </TableHeader>
           <TableBody>
             {loading ? (
-              Array.from({ length: 5 }).map((_, i) => (
-                <TableRow key={i}>
-                  <TableCell><Skeleton className="h-5 w-40" /></TableCell>
-                  <TableCell><Skeleton className="h-5 w-24" /></TableCell>
-                  <TableCell><Skeleton className="h-5 w-16 ml-auto" /></TableCell>
-                  <TableCell><Skeleton className="h-5 w-8" /></TableCell>
-                </TableRow>
-              ))
-            ) : data.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={4} className="h-32 text-center text-muted-foreground">
-                                    Nenhuma matéria-prima cadastrada.
-                </TableCell>
-              </TableRow>
+              <TableSkeleton columns={["w-40", "w-24", "w-16 ml-auto", "w-8"]} />
+            ) : materials.length === 0 ? (
+              <EmptyState colSpan={4} message="Nenhuma matéria-prima cadastrada." />
             ) : (
-              data.map((material) => (
+              materials.map((material) => (
                 <TableRow key={material.id}>
                   <TableCell className="font-medium">{material.name}</TableCell>
                   <TableCell>
@@ -134,16 +82,16 @@ export default function RawMaterialsPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleEdit(material)}>
+                        <DropdownMenuItem onClick={() => formDialog.openWith(material)}>
                           <Pencil className="mr-2 h-4 w-4" />
-                                                    Editar
+                          Editar
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => handleDelete(material)}
+                          onClick={() => deleteDialog.openWith(material)}
                           className="text-destructive focus:text-destructive"
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
-                                                    Excluir
+                          Excluir
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -156,18 +104,19 @@ export default function RawMaterialsPage() {
       </div>
 
       <RawMaterialFormDialog
-        key={formOpen ? (editingMaterial?.id ?? "new") : "closed"}
-        open={formOpen}
-        onOpenChange={setFormOpen}
-        material={editingMaterial}
+        key={formDialog.open ? (formDialog.item?.id ?? "new") : "closed"}
+        open={formDialog.open}
+        onOpenChange={formDialog.setOpen}
+        material={formDialog.item}
         onSubmit={handleSubmit}
       />
 
-      {deletingMaterial && (
-        <RawMaterialDeleteDialog
-          open={deleteOpen}
-          onOpenChange={setDeleteOpen}
-          materialName={deletingMaterial.name}
+      {deleteDialog.item && (
+        <ConfirmDeleteDialog
+          open={deleteDialog.open}
+          onOpenChange={deleteDialog.setOpen}
+          entityLabel="A matéria-prima"
+          entityName={deleteDialog.item.name}
           onConfirm={handleConfirmDelete}
         />
       )}

@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,21 +12,22 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Loader2 } from "lucide-react"
-import { useState } from "react"
 
-interface ProductDeleteDialogProps {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-    productName: string;
-    onConfirm: () => Promise<void>;
+interface ConfirmDeleteDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  entityLabel: string
+  entityName: string
+  onConfirm: () => Promise<void>
 }
 
-export function ProductDeleteDialog({
+export function ConfirmDeleteDialog({
   open,
   onOpenChange,
-  productName,
+  entityLabel,
+  entityName,
   onConfirm,
-}: ProductDeleteDialogProps) {
+}: ConfirmDeleteDialogProps) {
   const [loading, setLoading] = useState(false)
 
   const handleConfirm = async () => {
@@ -44,8 +46,8 @@ export function ProductDeleteDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
           <AlertDialogDescription>
-                        Essa ação não pode ser desfeita. O produto{" "}
-            <strong>{productName}</strong> será removido permanentemente.
+            Essa ação não pode ser desfeita. {entityLabel}{" "}
+            <strong>{entityName}</strong> será removido(a) permanentemente.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -56,7 +58,7 @@ export function ProductDeleteDialog({
             className="bg-destructive text-white hover:bg-destructive/90"
           >
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Excluir
+            Excluir
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

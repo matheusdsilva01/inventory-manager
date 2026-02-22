@@ -10,33 +10,22 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
 import { useGetProducibleProductsQuery } from "@/store/api"
+import { formatPrice } from "@/lib/utils"
+import { PageHeader } from "@/components/common/page-header"
+import { TableSkeleton } from "@/components/common/table-skeleton"
+import { EmptyState } from "@/components/common/empty-state"
 
 export default function ProducibleProductsPage() {
   const { data = [], isLoading: loading } = useGetProducibleProductsQuery()
 
-  const formatPrice = (price: number) =>
-    new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(price)
-
   return (
     <div className="space-y-6">
-      <div>
-        <div className="flex items-center gap-3">
-          <PackageCheck className="h-8 w-8 text-violet-600 dark:text-violet-400" />
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">
-                            Produtos Produzíveis
-            </h1>
-            <p className="text-muted-foreground mt-1">
-                            Produtos com receita e estoque suficiente para produção
-            </p>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        title="Produtos Produzíveis"
+        description="Produtos com receita e estoque suficiente para produção"
+        icon={<PackageCheck className="h-8 w-8 text-violet-600 dark:text-violet-400" />}
+      />
 
       <div className="rounded-lg border bg-card">
         <Table>
@@ -50,31 +39,9 @@ export default function ProducibleProductsPage() {
           </TableHeader>
           <TableBody>
             {loading ? (
-              Array.from({ length: 5 }).map((_, i) => (
-                <TableRow key={i}>
-                  <TableCell>
-                    <Skeleton className="h-5 w-40" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-5 w-24" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-5 w-20" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-5 w-12 ml-auto" />
-                  </TableCell>
-                </TableRow>
-              ))
+              <TableSkeleton columns={["w-40", "w-24", "w-20", "w-12 ml-auto"]} />
             ) : data.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={4}
-                  className="h-32 text-center text-muted-foreground"
-                >
-                                    Nenhum produto disponível para produção.
-                </TableCell>
-              </TableRow>
+              <EmptyState colSpan={4} message="Nenhum produto disponível para produção." />
             ) : (
               data.map((product) => (
                 <TableRow key={product.id}>
